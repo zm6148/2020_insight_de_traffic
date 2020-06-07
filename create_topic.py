@@ -1,10 +1,7 @@
 from kafka.admin import KafkaAdminClient, NewTopic
+import server_name 
 
-
-servers = ['b-1.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-           'b-2.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-           'b-3.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092']
-
+servers = server_name.servers
 
 admin_client = KafkaAdminClient(bootstrap_servers=servers, client_id='test')
 
