@@ -14,4 +14,4 @@ consumer = KafkaConsumer('numtest',
 for message in consumer:
     value = message.value
     print('recived')
-    print(value)
+    print(value['data'])
