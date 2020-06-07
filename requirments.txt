@@ -1,10 +1,10 @@
-cmake
-dlib
-face_recognition
-numpy
-opencv-python
+#cmake
+#dlib
+#face_recognition
+#numpy
+#opencv-python
 
-steps for insitialize opencv node:
+#steps for insitialize opencv node:
 apt-get updata
 sudo apt-get install python3-pip
 pip3 install cmake
@@ -16,3 +16,9 @@ pip3 install dlib
 pip3 install face_recognition
 pip3 install numpy
 pip3 install opencv-python
+
+#install python kafka:
+pip3 install kafka-python
+
+#trained yolo weights:
+#wget https://pjreddie.com/media/files/yolov3.weights
