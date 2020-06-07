@@ -1,0 +1,4 @@
+from pykafka import KafkaClient
+
+client = KafkaClient(hosts="b-1.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.c b-3.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092,
+                            b-2.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092")

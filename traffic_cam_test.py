@@ -31,7 +31,7 @@ VIDEO_URL = "https://s52.nysdot.skyvdn.com:443/rtplive/R11_018/playlist.m3u8"
 # facing
 
 cam = cv2.VideoCapture(VIDEO_URL)
-cv2.namedWindow("traffic")
+#cv2.namedWindow("traffic")
 
 while True:
     f, im = cam.read()
@@ -46,11 +46,3 @@ while True:
     print('bus: {}'.format(class_ids.count(5)))
     print('dog: {}'.format(class_ids.count(16)))
     print('horse: {}'.format(class_ids.count(17)))
-    
-    # Display the resulting frame
-    # cv2.imshow('traffic',image_o)
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-        
-cam.release()
-cv2.destroyAllWindows()
