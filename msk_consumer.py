@@ -1,10 +1,8 @@
 from kafka import KafkaConsumer
 from json import loads
+import server_name 
 
-servers = ['b-1.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-           'b-2.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-           'b-3.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092']
-
+servers = server_name.servers
 
 consumer = KafkaConsumer('numtest',
      			bootstrap_servers=servers,

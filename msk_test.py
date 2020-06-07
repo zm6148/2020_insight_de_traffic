@@ -2,11 +2,9 @@
 from time import sleep
 from json import dumps
 from kafka import KafkaProducer
+import server_name 
 
-
-servers = ['b-1.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-	   'b-2.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092',
-           'b-3.traffickafka.sn43u9.c7.kafka.us-east-1.amazonaws.com:9092']
+servers = server_name.servers
 
 producer = KafkaProducer(bootstrap_servers=servers,
 			value_serializer=lambda x:dumps(x).encode('utf-8'))
