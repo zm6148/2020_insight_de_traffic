@@ -11,7 +11,7 @@ from datetime import datetime
 
 # connect and create camera specific topic
 servers = server_name.servers
-cam_ID = 'cam_1'
+cam_ID = 'cam_2'
 
 # connect to kafka server and produce topic
 producer = KafkaProducer(bootstrap_servers=servers,
@@ -38,15 +38,15 @@ with open(class_path, 'r') as f:
 COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 
 # Video URL
-VIDEO_URL = 'https://s52.nysdot.skyvdn.com:443/rtplive/R11_018/playlist.m3u8'
+VIDEO_URL = 'https://s51.nysdot.skyvdn.com:443/rtplive/R11_004/playlist.m3u8'
 # Camera Info
-cam_name = 'I-95 Weeks Avenue'
+cam_name = 'I-278 at Whittier Street'
 # lat
-lat = 40.845200
+lat = 40.822477
 # lon
-lon = -73.907545
+lon = -73.885890
 # facing
-facing = 'south'
+facing = 'south north'
 
 # read video
 cam = cv2.VideoCapture(VIDEO_URL)
