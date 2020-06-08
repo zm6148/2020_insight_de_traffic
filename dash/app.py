@@ -4,7 +4,22 @@ import dash_html_components as html
 import os
 from dash.dependencies import Input, Output
 import plotly_express as px
-import pandas as pd 
+import pandas as pd
+from kafka import KafkaConsumer
+from json import loads
+import server_name 
+
+# config kafka connection
+servers = server_name.servers
+
+consumer = KafkaConsumer(bootstrap_servers=servers,
+                        auto_offset_reset='earliest',
+                        enable_auto_commit=True,
+                        group_id='my-group',
+                        value_deserializer=lambda x: loads(x.decode('utf-8')))
+
+# subscribe to topics
+consumer.subscribe(['cam_1'])
 
 # create app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -23,7 +38,7 @@ app.layout = html.Div(
         dcc.Graph(id='live-update-graph'),
         dcc.Interval(
             id='interval-component',
-            interval=1*1000, # in milliseconds
+            interval=5*1000, # in milliseconds
             n_intervals=0
         )
     ])
@@ -32,50 +47,36 @@ app.layout = html.Div(
 # Multiple components can update everytime interval gets fired.
 @app.callback(Output('live-update-graph', 'figure'),
               [Input('interval-component', 'n_intervals')])
+
 def update_graph_live(n):
     
     # build data frame for mapplot
     data = []
-    # Collect some data
-    # df = px.data.carshare()
-    data1 = {'cars': 11, 
-            'trucks': 1, 
-            'person': 0, 
-            'bicycle': 0, 
-            'motorcycle': 0, 
-            'bus': 0, 
-            'vehicles': 12, 
-            'cam_ID': 'cam_1', 
-            'cam_name': 'I-95 Weeks Avenue', 
-            'lat': 40.8452, 
-            'lon': -73.907545, 
-            'facing': 'south', 
-            'time': '2020-06-08 04:18:28', 
-            'region': 500}
     
-    data2 = {'cars': 11, 
-            'trucks': 1, 
-            'person': 0, 
-            'bicycle': 0, 
-            'motorcycle': 0, 
-            'bus': 0, 
-            'vehicles': 34, 
-            'cam_ID': 'cam_1', 
-            'cam_name': 'I-278 at Whittier Street', 
-            'lat': 40.822477, 
-            'lon': -73.885890, 
-            'facing': 'south', 
-            'time': '2020-06-08 04:18:28', 
-            'region': 550}
-            
-    data.append(data1)
-    data.append(data2)
-            
+    #dummy poll
+    consumer.poll()
+
+    # go to end of the stream
+    consumer.seek_to_end()
+   
+    # build df for plot
+    ii = 0
+    for message in consumer:
+        ii = ii + 1
+        value = message.value
+        data.append(value)
+        print(ii)
+        print('recived')
+        print(value)
+        if len(data) > 1:
+            break
+ 
     if len(data) < 2:
         df = pd.DataFrame(data, index=[0])
     else:
         df = pd.DataFrame(data)
-
+    
+    print('ploting')
     # Create the graph with subplots
     figure = px.scatter_mapbox(df, 
                                lat='lat', 
@@ -89,4 +90,4 @@ def update_graph_live(n):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True,host='0.0.0.0')
