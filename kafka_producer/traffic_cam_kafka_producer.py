@@ -82,7 +82,10 @@ while True:
            }
     
     # send data to topic
-    producer.send(cam_ID, value=data)
+    # only if car detected
+    if class_ids.count(2) + class_ids.count(7) + class_ids.count(3) + class_ids.count(5)>0:
+        producer.send(cam_ID, value=data)
+    
     print('sent')
     sleep(1)
 
