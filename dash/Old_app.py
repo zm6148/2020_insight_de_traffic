@@ -19,7 +19,7 @@ consumer = KafkaConsumer(bootstrap_servers=servers,
                         value_deserializer=lambda x: loads(x.decode('utf-8')))
 
 # subscribe to topics
-consumer.subscribe(['cam_1','cam_2','cam_3','cam_4','cam_5','cam_6','cam_7','cam_8','cam_9','cam_10','cam_11','cam_12'])
+consumer.subscribe(['cam_1'])
 
 # create app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -38,7 +38,7 @@ app.layout = html.Div(
         dcc.Graph(id='live-update-graph'),
         dcc.Interval(
             id='interval-component',
-            interval=3*1000, # in milliseconds
+            interval=5*1000, # in milliseconds
             n_intervals=0
         )
     ])
@@ -55,41 +55,36 @@ def update_graph_live(n):
     
     #dummy poll
     consumer.poll()
+
     # go to end of the stream
     consumer.seek_to_end()
    
     # build df for plot
+    ii = 0
     for message in consumer:
+        ii = ii + 1
         value = message.value
         data.append(value)
-       # print(ii)
-       # print('recived')
-       # print(value)
-       # print(len(data))
-        if len(data) == 12:
+        print(ii)
+        print('recived')
+        print(value)
+        if len(data) > 1:
             break
-    
+ 
     if len(data) < 2:
         df = pd.DataFrame(data, index=[0])
     else:
         df = pd.DataFrame(data)
     
-    print(len(data))
     print('ploting')
     # Create the graph with subplots
     figure = px.scatter_mapbox(df, 
                                lat='lat', 
                                lon='lon', 
                                color='vehicles', 
-                               size='vehicles',
-                               color_continuous_scale=px.colors.sequential.thermal, 
-                               size_max=15, 
-                               zoom=11)
-    
-    figure.update_layout(uirevision = True,
-                         mapbox = {'center': {'lon': -73.882781, 'lat': 40.828449}}) 
-
-
+                               size='region',
+                               color_continuous_scale=px.colors.sequential.Inferno_r, 
+                               size_max=15, zoom=11.5)
 
     return figure
 
