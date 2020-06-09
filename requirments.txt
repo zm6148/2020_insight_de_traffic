@@ -5,12 +5,12 @@
 #opencv-python
 
 #steps for insitialize opencv node:
-apt-get updata
+sudo apt-get update
 sudo apt-get install python3-pip
 pip3 install cmake
 
 sudo apt-get install build-essential cmake pkg-config
-apt-get install -y libsm6 libxext6 libxrender-dev
+sudo apt-get install -y libsm6 libxext6 libxrender-dev
 
 pip3 install dlib
 pip3 install face_recognition
