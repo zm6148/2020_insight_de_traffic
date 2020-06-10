@@ -10,7 +10,7 @@ from datetime import datetime
 import cam_info
 
 # connect and create camera specific topic
-#servers = server_name.servers
+servers = server_name.servers
 
 # index of those two cams
 cam_index_1 = 0
@@ -37,10 +37,10 @@ lon_2 = cam_info.lons[cam_index_2]
 facing_1 = cam_info.facings[cam_index_1]
 facing_2 = cam_info.facings[cam_index_2]
 
-# # connect to kafka server and produce topic
-# producer = KafkaProducer(bootstrap_servers=servers,
-#                         value_serializer=lambda x:dumps(x).encode('utf-8'))
-# print(producer.bootstrap_connected())
+# connect to kafka server and produce topic
+producer = KafkaProducer(bootstrap_servers=servers,
+                         value_serializer=lambda x:dumps(x).encode('utf-8'))
+print(producer.bootstrap_connected())
 
 # current script path
 scripty_path = os.path.dirname(os.path.realpath(__file__))
@@ -117,12 +117,12 @@ while True:
     # if cv2.waitKey(1) & 0xFF == ord('q'):
     #     break
 
-    # # send data to topic
-    # # only if car detected
-    # if class_ids_1.count(2) + class_ids_1.count(7) + class_ids_1.count(3) + class_ids_1.count(5) > 0:
-    #     producer.send(cam_ID_1, value=data_1)
-    # print('sent 1')
-    # if class_ids_2.count(2) + class_ids_2.count(7) + class_ids_2.count(3) + class_ids_2.count(5) > 0:
-    #     producer.send(cam_ID_2, value=data_2)
-    # print('sent 2')
-    # #sleep(1)
+    # send data to topic
+    # only if car detected
+    if class_ids_1.count(2) + class_ids_1.count(7) + class_ids_1.count(3) + class_ids_1.count(5) > 0:
+        producer.send(cam_ID_1, value=data_1)
+    print('sent 1')
+    if class_ids_2.count(2) + class_ids_2.count(7) + class_ids_2.count(3) + class_ids_2.count(5) > 0:
+        producer.send(cam_ID_2, value=data_2)
+    print('sent 2')
+    #sleep(1)
