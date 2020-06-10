@@ -65,8 +65,8 @@ COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 cam_1= cv2.VideoCapture(VIDEO_URL_1)
 cam_2= cv2.VideoCapture(VIDEO_URL_2)
 
-cv2.namedWindow("traffic1")
-cv2.namedWindow("traffic2")
+#cv2.namedWindow("traffic1")
+#cv2.namedWindow("traffic2")
 
 while True:
     
