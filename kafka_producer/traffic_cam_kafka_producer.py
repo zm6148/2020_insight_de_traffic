@@ -11,7 +11,7 @@ from datetime import datetime
 
 # connect and create camera specific topic
 servers = server_name.servers
-cam_ID = 'cam_3'
+cam_ID = 'cam_1'
 
 # connect to kafka server and produce topic
 producer = KafkaProducer(bootstrap_servers=servers,
@@ -38,13 +38,13 @@ with open(class_path, 'r') as f:
 COLORS = np.random.uniform(0, 255, size=(len(classes), 3))
 
 # Video URL
-VIDEO_URL = 'https://s52.nysdot.skyvdn.com:443/rtplive/R11_020/playlist.m3u8'
+VIDEO_URL = 'https://s52.nysdot.skyvdn.com:443/rtplive/R11_018/playlist.m3u8'
 # Camera Info
-cam_name = 'I-95 at Arthur Avenue'
+cam_name = 'I-95 Weeks Avenue'
 # lat
-lat = 40.843868
+lat = 40.845200
 # lon
-lon = -73.895836
+lon = -73.907545
 # facing
 facing = 'south'
 
@@ -82,7 +82,7 @@ while True:
            }
     
     # send data to topic
-    # only is cars detected
+    # only if car detected
     if class_ids.count(2) + class_ids.count(7) + class_ids.count(3) + class_ids.count(5)>0:
         producer.send(cam_ID, value=data)
     print('sent')
