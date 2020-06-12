@@ -1,9 +1,0 @@
-b-1.kafka-mz2.mbv87g.c7.kafka.us-east-1.amazonaws.com:9094,b-2.kafka-mz2.mbv87g.c7.kafka.us-east-1.amazonaws.com:9094,b-3.kafka-mz2.mbv87g.c7.kafka.us-east-1.amazonaws.com:9094from time import sleep
-from json import dumps
-from kafka import KafkaProducer
-
-producer = KafkaProducer(bootstrap_servers=['b-3.kafka-mz.gcdw9z.c7.kafka.us-east-1.amazonaws.com:9094',
-                                            'b-2.kafka-mz.gcdw9z.c7.kafka.us-east-1.amazonaws.com:9094',
-                                            'b-1.kafka-mz.gcdw9z.c7.kafka.us-east-1.amazonaws.com:9094'],
-                         value_serializer=lambda x: 
-                         dumps(x).encode('utf-8'))
