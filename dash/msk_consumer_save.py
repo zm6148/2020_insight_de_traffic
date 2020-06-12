@@ -14,7 +14,9 @@ from mysql.connector import Error
 from mysql.connector import errorcode
 from sqlalchemy import create_engine
 import sql_key
-
+import logging
+import threading
+import time
 
 # all cam topics
 #all_cams = ['cam_1','cam_2','cam_3','cam_4','cam_5','cam_6','cam_7','cam_8','cam_9',
@@ -38,50 +40,25 @@ for item in all_cams:
     consumers.append(consumer)
 print('created consumers')
 
-# create app
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
-print('initiated app')
-
-# setmapbox style
-# current script path
-scripty_path = os.path.dirname(os.path.realpath(__file__))
-mapbox_access_token = 'pk.eyJ1IjoibXo4NiIsImEiOiJja2I5bWozeGgwZTJ0MnJwZjdtbHBjZjNxIn0.pSTk6D13HreCcxth26axeg'
-px.set_mapbox_access_token(mapbox_access_token)
-print('set map box')
-
 # sql connection
 engine = create_engine(sql_key.key, echo=False)
 print('set sql engine')
 
-app.layout = html.Div(
-    html.Div([
-        html.H4('Traffic Live Update'),
-        dcc.Graph(id='live-update-graph'),
-        dcc.Interval(
-            id='interval-component',
-            interval=5*1000, # in milliseconds
-            n_intervals=0
-        )
-    ])
-)
 
-
-print('begin callbacks')
-# Multiple components can update everytime interval gets fired.
-@app.callback(Output('live-update-graph', 'figure'),
-              [Input('interval-component', 'n_intervals')])
-def update_graph_live(n):
-    
+print('start save to DB')
+while True:
+    print('building df')
     # build data frame for mapplot
     data = []
     # read latest record from each consumer
     for consumer in consumers:
+        print('consumer')
         #dummy poll
         consumer.poll()
         # go to end of the stream
         consumer.seek_to_end()
         for message in consumer:
+            print('message')
             value = message.value
             data.append(value)
             if len(data) > 0:
@@ -98,24 +75,5 @@ def update_graph_live(n):
 
     # save to database
     df.to_sql(name='traffic_cams', con=engine, if_exists = 'append', index=False)
-    
-    # start plot
-    print(len(data))
-    print('ploting')
-    # Create the graph with subplots
-    figure = px.scatter_mapbox(df, 
-                               lat='lat', 
-                               lon='lon', 
-                               color='vehicles', 
-                               size='vehicles',
-                               color_continuous_scale=px.colors.sequential.thermal, 
-                               size_max=15, 
-                               zoom=11)
-    
-    figure.update_layout(uirevision = True,
-                         mapbox = {'center': {'lon': -73.884704, 'lat': 40.825355}}) 
-    return figure
-
-
-if __name__ == '__main__':
-    app.run_server(host='0.0.0.0')
+    print(df)
+    print('saved')
