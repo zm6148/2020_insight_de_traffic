@@ -35,7 +35,7 @@ app.layout = html.Div([
         dcc.Graph(id='live-update-graph'),
         dcc.Interval(
             id='interval-component',
-            interval=2*1000, # in milliseconds
+            interval=1*1000, # in milliseconds
             n_intervals=0)]),
     
     html.Div([html.H4('Traffic Historical Data'),
@@ -63,14 +63,12 @@ app.layout = html.Div([
 def update_graph_live(n):
     
     # build data frame for mapplot
-    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
+    #df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
 
-#    df = pd.read_sql('SELECT time, cam_ID, lat, lon, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY CONCAT(cam_ID, time)', con=engine)
+    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
 
-
-
-    if len(df) < 10:
-        df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
+    #if len(df) < 10:
+    #    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
     # start plot
     #print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print(df)
@@ -79,14 +77,15 @@ def update_graph_live(n):
     figure = px.scatter_mapbox(df, 
                                lat='lat', 
                                lon='lon', 
-                               color='vehicles', 
-                               size='vehicles',
-                               color_continuous_scale=px.colors.sequential.thermal, 
+                               color='average_vehicles', 
+                               size='average_vehicles',
+                               hover_data = ['cars', 'trucks'],
+                               color_continuous_scale=px.colors.sequential.Oranges, 
                                size_max=16,
-                               zoom=11)
+                               zoom=9)
     
     figure.update_layout(uirevision = True,
-                         mapbox = {'center': {'lon':-73.880274, 'lat': 40.836478}}) 
+                         mapbox = {'center': {'lon':-73.862614, 'lat': 40.799312}}) 
     return figure
 
 #def historical data plots
@@ -112,11 +111,11 @@ def update_graph(xaxis_column_name):
                                lon='lon', 
                                color='average_vehicles', 
                                size='average_vehicles',
-                               color_continuous_scale=px.colors.sequential.thermal, 
+                               color_continuous_scale=px.colors.sequential.Oranges, 
                                size_max=16,
                                animation_frame= 'time_mark', 
                                animation_group = 'cam_ID',
-                               zoom=11)
+                               zoom=9)
     return figure
 
 

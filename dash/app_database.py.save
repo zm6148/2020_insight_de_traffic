@@ -1,0 +1,98 @@
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+import os
+from dash.dependencies import Input, Output
+import plotly_express as px
+import pandas as pd
+from kafka import KafkaConsumer
+from json import loads
+import server_name 
+import time
+import mysql.connector
+from mysql.connector import Error
+from mysql.connector import errorcode
+from sqlalchemy import create_engine
+import sql_key
+
+# create app
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+
+# setmapbox style
+# current script path
+scripty_path = os.path.dirname(os.path.realpath(__file__))
+mapbox_access_token = 'pk.eyJ1IjoibXo4NiIsImEiOiJja2I5bWozeGgwZTJ0MnJwZjdtbHBjZjNxIn0.pSTk6D13HreCcxth26axeg'
+px.set_mapbox_access_token(mapbox_access_token)
+
+# sql connection
+engine = create_engine(sql_key.key, echo=False)
+
+# test data for historic plot
+query = 'SELECT * FROM traffic_cams WHERE time >= NOW() - INTERVAL 1 HOUR and mod(minute(time),5) = 0'
+df2 = pd.read_sql(query, con=engine)
+
+df2['time_by_m'] = df2['time'].dt.floor('1Min') 
+df2 = df2.drop_duplicates(['time_by_m', 'cam_ID'])
+df2['time_str'] = df2['time_
+app.layout = html.Div([
+    html.Div([
+        html.H4('Traffic Live Update'),
+        dcc.Graph(id='live-update-graph'),
+        dcc.Interval(
+            id='interval-component',
+            interval=2*1000, # in milliseconds
+            n_intervals=0
+        )
+    ]),
+    
+#    html.Div([html.H4('Traffic Historic Data'),
+#              dcc.Graph(figure=px.scatter(px.data.gapminder(), x="gdpPercap", y="lifeExp", animation_frame="year", animation_group="country",
+#              size="pop", color="continent", hover_name="country", facet_col="continent",
+#              log_x=True, size_max=45, range_x=[100,100000], range_y=[25,90]))
+#    ]),    
+
+
+    html.Div([html.H4('Traffic Historic Data'),
+              dcc.Graph(figure = px.scatter_mapbox(df2, 
+                               lat='lat', 
+                               lon='lon', 
+                               color='vehicles', 
+                               size='vehicles',
+                               color_continuous_scale=px.colors.sequential.thermal, 
+                               size_max=16,
+                               animation_frame= 'time_str', 
+                               animation_group = 'cam_ID',
+                               zoom=11))
+   ])
+])
+
+# Multiple components can update everytime interval gets fired.
+@app.callback(Output('live-update-graph', 'figure'),
+              [Input('interval-component', 'n_intervals')])
+def update_graph_live(n):
+    
+    # build data frame for mapplot
+    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
+    # start plot
+    #print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    print(df)
+    print('ploting')
+    # Create the graph with subplots
+    figure = px.scatter_mapbox(df, 
+                               lat='lat', 
+                               lon='lon', 
+                               color='vehicles', 
+                               size='vehicles',
+                               color_continuous_scale=px.colors.sequential.thermal, 
+                               size_max=16,
+                               zoom=11)
+    
+    figure.update_layout(uirevision = True,
+                         mapbox = {'center': {'lon':-73.880274, 'lat': 40.836478}}) 
+    return figure
+
+#def historical_graph()
+
+if __name__ == '__main__':
+    app.run_server(host='0.0.0.0')

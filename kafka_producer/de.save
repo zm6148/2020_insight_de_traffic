@@ -1,0 +1,15 @@
+    data_1 = {'cars': class_ids_1.count(2),
+            'trucks': class_ids_1.count(7),
+            'person': class_ids_1.count(0),
+            'bicycle': class_ids_1.count(1),
+            'motorcycle': class_ids_1.count(3),
+            'bus': class_ids_1.count(5),
+            'vehicles': class_ids_1.count(2) + class_ids_1.count(7) + class_ids_1.count(3) + class_i>
+            'cam_ID': cam_ID_1,
+            'cam_name': cam_name_1,
+            'lat': lat_1,
+            'lon': lon_1,
+            'facing': facing_1,
+            'time': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'region': 500 
+           }
