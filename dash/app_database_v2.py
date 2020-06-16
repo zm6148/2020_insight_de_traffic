@@ -7,7 +7,7 @@ import plotly_express as px
 import pandas as pd
 from kafka import KafkaConsumer
 from json import loads
-import server_name 
+#import server_name 
 import time
 import mysql.connector
 from mysql.connector import Error
@@ -35,7 +35,7 @@ app.layout = html.Div([
         dcc.Graph(id='live-update-graph'),
         dcc.Interval(
             id='interval-component',
-            interval=1*1000, # in milliseconds
+            interval=2*1000, # in milliseconds
             n_intervals=0)]),
     
     html.Div([html.H4('Traffic Historical Data'),
@@ -53,7 +53,8 @@ app.layout = html.Div([
                  placeholder="Select camera location"),
              dcc.Dropdown(
                  id='time',
-                 options=[{'label': i, 'value': i} for i in ['Hour','Day','Week']]),
+                 options=[{'label': i, 'value': i} for i in ['Hour','Day','Week']],
+                 placeholder="Select a time period"),
              dcc.Graph(id='trace-graph')]) 
 ])
 
@@ -65,7 +66,7 @@ def update_graph_live(n):
     # build data frame for mapplot
     #df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
 
-    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
+    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
 
     #if len(df) < 10:
     #    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
