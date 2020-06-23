@@ -27,3 +27,12 @@ git clone clone https://github.com/zm6148/2020_insight_de_traffic.git
 #trained yolo weights:
 cd 2020_insight_de_traffic/kafka_producer/yolo_model
 wget https://pjreddie.com/media/files/yolov3.weights
+
+#dash requirements
+pip3 install dash
+pip3 install dash-renderer
+pip3 install dash-html-components
+pip3 install dash-core-components
+pip3 install plotly --upgrade
+pip3 install plotly-express
+

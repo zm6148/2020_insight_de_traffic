@@ -1,3 +1,4 @@
-kafka_producer/yolo_model/yolov3.weights
-dash/sql_key.py
-kafka_producer/server_name.py
+kafka_producer/src/yolo_model/yolov3.weights
+dash/src/sql_key.py
+dash/src/server_name.py
+kafka_producer/src/server_name.py

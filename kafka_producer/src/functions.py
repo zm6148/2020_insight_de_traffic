@@ -3,10 +3,7 @@ import os
 import cv2
 import face_recognition
 import numpy as np
-#from keras.preprocessing.image import img_to_array
-#import tensorflow as tf
 from PIL import Image
-#import urllib
 
 ################################################################################
 # function to encode faces
@@ -41,14 +38,9 @@ def classify_face(img, known_faces):
     :param im: str of file path
     :return: return found faces, altered img, and wether there is a match 
     """
-    #faces = get_encoded_faces(known_faces_path)
     faces_encoded = list(known_faces.values())
     known_face_names = list(known_faces.keys())
 
-    #img = cv2.imread(im, 1)
-    #img = cv2.resize(img, (0, 0), fx=0.5, fy=0.5)
-    #img = img[:,:,::-1]
- 
     face_locations = face_recognition.face_locations(img)
     unknown_face_encodings = face_recognition.face_encodings(img, face_locations)
 
@@ -93,9 +85,9 @@ def find_weapon(img_cv, model):
     m,n = 50,50
     
     weapon = ['knife', 'gun', 'gun']
-    #model = tf.keras.models.load_model(model_path)
+   
     x=[]
-    # img_cv = cv2.imread(im, 1)
+    
     # convert to pillow image
     img = cv2.cvtColor(img_cv, cv2.COLOR_BGR2RGB)
     im_pil = Image.fromarray(img)
@@ -127,10 +119,6 @@ def get_output_layers(net):
 
 def draw_prediction(img, confidence, x, y, x_plus_w, y_plus_h, label, color):
 
-    #label = str(classes[class_id])
-
-    #color = COLORS[class_id]
-
     cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), (color), 2)
 
     cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
@@ -138,13 +126,8 @@ def draw_prediction(img, confidence, x, y, x_plus_w, y_plus_h, label, color):
     
 def object_identification(image, classes, net, output_layers, COLORS):
     
-    #image = cv2.imread(input_image_path)
     Width = image.shape[1]
     Height = image.shape[0]
-    
-    # classes = None
-    # with open(class_path, 'r') as f:
-    #     classes = [line.strip() for line in f.readlines()]
     
     scale = 0.00392
     blob = cv2.dnn.blobFromImage(image, scale, (416,416), (0,0,0), True, crop=False)

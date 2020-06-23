@@ -6,13 +6,13 @@ import numpy as np
 from time import sleep
 from json import dumps
 from kafka import KafkaProducer
-#import server_name
+import server_name
 from datetime import datetime
 import cam_info
 import time
 
 # connect and create camera specific topic
-#servers = server_name.servers
+servers = server_name.servers
     
 def image_processing(cam_index):
     
@@ -31,9 +31,9 @@ def image_processing(cam_index):
     facing = cam_info.facings[cam_index]
     
     # connect to kafka server and produce topic
-    #producer = KafkaProducer(bootstrap_servers=servers,
-    #                        value_serializer=lambda x:dumps(x).encode('utf-8'))
-    #print(producer.bootstrap_connected())
+    producer = KafkaProducer(bootstrap_servers=servers,
+                             value_serializer=lambda x:dumps(x).encode('utf-8'))
+    print(producer.bootstrap_connected())
     
     # current script path
     scripty_path = os.path.dirname(os.path.realpath(__file__))
@@ -84,12 +84,11 @@ def image_processing(cam_index):
         # send data to topic
         # only if car detected
         if class_ids.count(2) + class_ids.count(7) + class_ids.count(3) + class_ids.count(5) > 0:
-            #producer.send(cam_ID, value=data)
+            producer.send(cam_ID, value=data)
             print(cam_index)
         
 
-if __name__ == "__main__":  # confirms that the code is under main function
-    names = ['America', 'Europe', 'Africa']
+if __name__ == "__main__":  
     proc0 = Process(target=image_processing, args=(0,))
     proc1 = Process(target=image_processing, args=(1,))
     proc2 = Process(target=image_processing, args=(2,))

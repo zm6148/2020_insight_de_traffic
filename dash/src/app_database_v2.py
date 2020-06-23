@@ -6,8 +6,7 @@ from dash.dependencies import Input, Output
 import plotly_express as px
 import pandas as pd
 from kafka import KafkaConsumer
-from json import loads
-#import server_name 
+from json import loads 
 import time
 import mysql.connector
 from mysql.connector import Error
@@ -64,14 +63,7 @@ app.layout = html.Div([
 def update_graph_live(n):
     
     # build data frame for mapplot
-    #df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
-
     df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
-
-    #if len(df) < 10:
-    #    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
-    # start plot
-    #print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     print(df)
     print('ploting')
     # Create the graph with subplots
@@ -103,7 +95,6 @@ def update_graph(xaxis_column_name):
     df2 = pd.read_sql(query, con=engine)
     df2['time_by_m'] = df2['time'].dt.floor('1Min') 
     df2 = df2.drop_duplicates(['time_by_m', 'cam_ID'])
-    #df['time_by_m'] = df['time_by_m'] - timedelta(hours=4)
     df2['time_mark'] = df2['time_by_m'].astype(str)
     df2.sort_values(by='time')
     
