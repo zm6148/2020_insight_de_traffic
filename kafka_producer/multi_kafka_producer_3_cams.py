@@ -93,7 +93,9 @@ if __name__ == "__main__":  # confirms that the code is under main function
     proc0 = Process(target=image_processing, args=(0,))
     proc1 = Process(target=image_processing, args=(1,))
     proc2 = Process(target=image_processing, args=(2,))
+    proc3 = Process(target=image_processing, args=(3,))
     proc0.start()
     proc1.start()
     proc2.start()
+    proc3.start()
 

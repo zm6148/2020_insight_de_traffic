@@ -66,7 +66,7 @@ def update_graph_live(n):
     # build data frame for mapplot
     #df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
 
-    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
+    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
 
     #if len(df) < 10:
     #    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
@@ -81,7 +81,7 @@ def update_graph_live(n):
                                color='average_vehicles', 
                                size='average_vehicles',
                                hover_data = ['cars', 'trucks'],
-                               color_continuous_scale=px.colors.sequential.Oranges, 
+                               color_continuous_scale=px.colors.sequential.Inferno, 
                                size_max=16,
                                zoom=9)
     
@@ -112,7 +112,7 @@ def update_graph(xaxis_column_name):
                                lon='lon', 
                                color='average_vehicles', 
                                size='average_vehicles',
-                               color_continuous_scale=px.colors.sequential.Oranges, 
+                               color_continuous_scale=px.colors.sequential.Inferno, 
                                size_max=16,
                                animation_frame= 'time_mark', 
                                animation_group = 'cam_ID',
