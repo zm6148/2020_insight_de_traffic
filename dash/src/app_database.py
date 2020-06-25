@@ -6,7 +6,8 @@ from dash.dependencies import Input, Output
 import plotly_express as px
 import pandas as pd
 from kafka import KafkaConsumer
-from json import loads 
+from json import loads
+import server_name 
 import time
 import mysql.connector
 from mysql.connector import Error
@@ -34,7 +35,7 @@ app.layout = html.Div([
         dcc.Graph(id='live-update-graph'),
         dcc.Interval(
             id='interval-component',
-            interval=5*1000, # in milliseconds
+            interval=2*1000, # in milliseconds
             n_intervals=0)]),
     
     html.Div([html.H4('Traffic Historical Data'),
@@ -52,37 +53,40 @@ app.layout = html.Div([
                  placeholder="Select camera location"),
              dcc.Dropdown(
                  id='time',
-                 options=[{'label': i, 'value': i} for i in ['Hour','Day','Week']],
-                 placeholder="Select a time period"),
+                 options=[{'label': i, 'value': i} for i in ['Hour','Day','Week']]),
              dcc.Graph(id='trace-graph')]) 
 ])
 
 # Multiple components can update everytime interval gets fired.
 @app.callback(Output('live-update-graph', 'figure'),
               [Input('interval-component', 'n_intervals')])
-
 def update_graph_live(n):
     
     # build data frame for mapplot
-    df = pd.read_sql('SELECT time, cam_ID, lat, lon, cars, trucks, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 10 GROUP BY CONCAT(cam_ID, time) HAVING COUNT(*) = 1', con=engine)
-    #print(df)
-    #print('ploting')
+    df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
+
+#    df = pd.read_sql('SELECT time, cam_ID, lat, lon, AVG(vehicles) as average_vehicles FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 15 GROUP BY CONCAT(cam_ID, time)', con=engine)
+
+
+
+    if len(df) < 10:
+        df = pd.read_sql('SELECT * FROM traffic_cams WHERE ( unix_timestamp( ) - unix_timestamp( time ) ) < 60 GROUP BY cam_ID HAVING COUNT(*) = 1;', con=engine)
+    # start plot
+    #print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    print(df)
+    print('ploting')
     # Create the graph with subplots
     figure = px.scatter_mapbox(df, 
                                lat='lat', 
                                lon='lon', 
-                               color='average_vehicles', 
-                               size='average_vehicles',
-                               hover_data = ['cars', 'trucks'],
-                               color_continuous_scale=px.colors.sequential.Inferno, 
+                               color='vehicles', 
+                               size='vehicles',
+                               color_continuous_scale=px.colors.sequential.thermal, 
                                size_max=16,
-                               zoom=9)
+                               zoom=11)
     
     figure.update_layout(uirevision = True,
-                         mapbox = {'center': {'lon':-73.862614, 'lat': 40.799312}}) 
-    print(df)
-    print('to plot')
-
+                         mapbox = {'center': {'lon':-73.880274, 'lat': 40.836478}}) 
     return figure
 
 #def historical data plots
@@ -99,6 +103,7 @@ def update_graph(xaxis_column_name):
     df2 = pd.read_sql(query, con=engine)
     df2['time_by_m'] = df2['time'].dt.floor('1Min') 
     df2 = df2.drop_duplicates(['time_by_m', 'cam_ID'])
+    #df['time_by_m'] = df['time_by_m'] - timedelta(hours=4)
     df2['time_mark'] = df2['time_by_m'].astype(str)
     df2.sort_values(by='time')
     
@@ -107,11 +112,11 @@ def update_graph(xaxis_column_name):
                                lon='lon', 
                                color='average_vehicles', 
                                size='average_vehicles',
-                               color_continuous_scale=px.colors.sequential.Inferno, 
+                               color_continuous_scale=px.colors.sequential.thermal, 
                                size_max=16,
                                animation_frame= 'time_mark', 
                                animation_group = 'cam_ID',
-                               zoom=9)
+                               zoom=11)
     return figure
 
 
