@@ -33,7 +33,7 @@ For example the traffic condtion along I-95 in NY.
 
 
 
-![system_png](./img/system.png)
+![system_png](./img/ezgif.com-video-to-gif(2).gif)
 
 ---
 
