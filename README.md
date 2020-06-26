@@ -24,7 +24,8 @@ In addition to live update, this project also record historical data.
 - Historical traffic counts at all junctions (last hour, day, week).
 - Detialed traffic breakdown at user selected junctions (last hour, day, week).
 
-![Demo_gif](./img/Spot_demo.gif)
+![Demo_gif](./img/ezgif.com-video-to-gif(1).gif)
+
 For example the traffic condtion along I-95 in NY.
 
 ---
