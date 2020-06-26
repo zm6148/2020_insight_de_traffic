@@ -31,7 +31,7 @@ For example the traffic condtion along I-95 in NY.
 ---
 ## System
 
-The parking ticket data is stored in S3 bucket. Spark fetch the data, add the spatial index and abstract the useful time information, then aggregate the data based on spatial and temporal buffers. Store the result into postgres. 
+
 
 ![system_png](./img/system.png)
 
