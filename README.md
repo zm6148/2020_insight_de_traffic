@@ -1,16 +1,15 @@
-# Spot!
+# TrafficSense
 
-> ***Spatial parking optimized tracking system to avoid parking ticket***
+> ***Real-time Traffic Pattern Monitoring***
 
 
-This is a project I completed during the Insight Data Engineering program (Boston, Summer 2020).
-Visit [datapipeline.online](http://datapipeline.online) to see it in action (or watch it [here](https://www.youtube.com/watch?v=SEieUv3eGAM)).
+I built this project in 3 weeks during Insight Data Engineering program (Boston, Summer 2020).
+Visit [dataengineermz.club/](http://dataengineermz.club/) to see it in action.
 
 ## Table of Contents
 
 1. [Usage](README.md#Usage)
 1. [System](README.md#System)
-1. [Data Source](README.md#Data-Source)
 1. [Setup](README.md#setup)
 1. [Run the system](README.md#run-the-system)
 1. [Contact Information](README.md#contact-information)
