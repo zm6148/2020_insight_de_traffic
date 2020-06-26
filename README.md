@@ -57,17 +57,17 @@ bash requirements.sh
 #### Strat data analysis EC2
 At each 14 data extraction EC2s
 ```
-python3 2020_insight_de_traffic/kafka_producer/src/multi_kafka_producer_3_cams.py
+python3 2020_insight_de_traffic/kafka_producer/src/multi_kafka_producer_3_cams.py &
 ```
 #### Strat kafka consumer EC2
 At kakfa consumer EC2
 ```
-python3 2020_insight_de_traffic/dash/src/msk_consumer_save_direct.py
+python3 2020_insight_de_traffic/dash/src/msk_consumer_save_direct.py &
 ```
 #### Strat front end EC2
 At front end EC2
 ```
-python3 2020_insight_de_traffic/dash/src/app_database_v2.py
+python3 2020_insight_de_traffic/dash/src/app_database_v2.py &
 ```
 
 ## Contact Information
