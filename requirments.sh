@@ -22,7 +22,7 @@ pip3 install opencv-python
 pip3 install kafka-python
 
 #clone from my git
-git clone clone https://github.com/zm6148/2020_insight_de_traffic.git
+#git clone clone https://github.com/zm6148/2020_insight_de_traffic.git
 
 #trained yolo weights:
 cd 2020_insight_de_traffic/kafka_producer/yolo_model
