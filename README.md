@@ -26,27 +26,22 @@ In addition to live update, this project also record historical data.
 
 ![Demo_gif](./img/ezgif.com-video-to-gif(1).gif)
 
-For example the traffic condtion along I-95 in NY.
+For example the traffic condtion along I-95 in Bronx NY.
 
 ---
 ## System
 
-
+This datapipline takes in live video streams from traffic cams and dedicates 1 computing resource (t2.medium) perfoming data extraction using comupter vision (neural net implemented in OpenCV) analysis for 4 traffic cam footages. After the data extraction stage, the extracted traffci information is feed to a Kafka data stream for temporary storage and queuing. A kafka consumenr aggregate the data and save to database. The flask front end displays the data in real-time.
 
 ![system_png](./img/ezgif.com-video-to-gif(2).gif)
 
----
-
-## Data Source
-
-  [Chicago parking tickets](https://www.propublica.org/datastore/dataset/chicago-parking-ticket-data)
 
 ---
 ## Setup
 
-Install and configure [AWS CLI](https://aws.amazon.com/cli/) and [Pegasus](https://github.com/InsightDataScience/pegasus) on your local machine, and clone this repository using
+This pipline requires 16 AWS EC2s. [Pegasus](https://github.com/InsightDataScience/pegasus) was used to set up multiple EC2s easier.
 
-
+For each EC2, clone this repository and run the 
 ### Cluster Structure:
 
 - (4 nodes) Spark Cluster - Batch & Airflow
