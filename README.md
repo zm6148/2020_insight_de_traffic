@@ -41,95 +41,34 @@ This datapipline takes in live video streams from traffic cams and dedicates 1 c
 
 This pipline requires 16 AWS EC2s. [Pegasus](https://github.com/InsightDataScience/pegasus) was used to set up multiple EC2s easier.
 
-For each EC2, clone this repository and run the 
-### Cluster Structure:
-
-- (4 nodes) Spark Cluster - Batch & Airflow
-- (1 node) PostgreSQL
-- (1 node) Flask
+For each EC2, clone this repository
 
 ```
-peg up ./cluster_configs/spark/master.yml
-peg up ./cluster_configs/spark/worker.yml
-peg up ./cluster_configs/post_node.yml
-peg up ./cluster_configs/flask_node.yml
+git clone https://github.com/zm6148/2020_insight_de_traffic.git
 ```
-
-For each cluster, install the services.
-
-#### spark cluster
-```
-peg service install spark_cluster aws
-peg service install spark_cluster environment
-peg service install spark_cluster hadoop
-peg service install spark_cluster spark
-```
-
-Install airflow on leader node of spark cluster
+and run the requiements.sh to install required technologies.
 
 ```
-sudo apt-get install python3-pip
-sudo python3 -m pip install apache-airflow
+bash requirements.sh
 ```
 
-
-Config spark cluster and sync the hadoop and spark configs among nodes.
-```
-bash ./cluster_configs/sync_scripts/sync_h.sh
-bash ./cluster_configs/sync_scripts/sync_s.sh
-```
-
-#### postgres node & flask node
-```
-peg service install post_node aws
-peg service install post_node environment
-peg service install flask_node aws
-peg service install flask_node environment
-```
-On the postgres node install postgres
-```
-sudo apt-get update && sudo apt-get -y upgrade
-sudo apt-get install postgresql postgresql-contrib​
-```
-On the flask node install flask
-```
-sudo apt-get install python3-pip
-pip install Flask
-```
----
 
 ## Run the system
 
-#### Compile scala project
-Generate the fat jar using sbt tools.
+#### Strat data analysis EC2
 ```
-cd spark_batch
-sbt clean
-sbt compile
-sbt assembly
+sudo python3 flask/run.py
 ```
-
-#### Run spark job
-
-After compile the jar file. Submit the job to spark to run. 
+#### Strat kafka consumer EC2
 ```
-bin/spark-submit --class com.spot.parking.tracking.Aggregateor --master yarn --deploy-mode client ~/Spot/parking-tracking/target/scala-2.11/parking-tracking-assembly-0.0.1.jar
+sudo python3 flask/run.py
 ```
-
-#### Schedule job
-
-Running airflow/schedule.sh on the master of spark cluster will add the batch job to the scheduler. The batch job is set to execute every 24 hours
-```
-bash airflow/schedule.sh
-```
-
-#### Run web app
-On the flask node
+#### Strat front end EC2
 ```
 sudo python3 flask/run.py
 ```
 
 ## Contact Information
 
-* [LinkedIn](https://www.linkedin.com/in/pengwei715)
-* weipeng0715@gmail.com
+* [LinkedIn](https://www.linkedin.com/in/zm6148)
+* mz86@njit.edu
